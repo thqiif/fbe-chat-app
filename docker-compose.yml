@@ -30,7 +30,7 @@ services:
       - "5173:5173"
     environment:
       NODE_ENV: development
-      VITE_API_URL: http://localhost:3001
+      VITE_API_URL: https://demonstrate-happened-contacts-manor.trycloudflare.com
     volumes:
       - ./client:/app/client
       - ./proto:/app/proto
