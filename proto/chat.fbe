@@ -1,0 +1,15 @@
+package chat
+
+struct ChatEnvelope
+{
+    uint16 schemaVersion;
+    string kind;
+    string room;
+    string messageId;
+    string clientId;
+    string username;
+    string text;
+    uint64 sentAtNs;
+    uint64 serverReceivedAtNs;
+    string ackForMessageId;
+}

@@ -1,0 +1,69 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: development
+    working_dir: /app/server
+    command: npm run dev
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+    volumes:
+      - ./server:/app/server
+      - ./proto:/app/proto
+      - server_node_modules:/app/server/node_modules
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: development
+    working_dir: /app/client
+    command: npm run dev
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:3001
+    volumes:
+      - ./client:/app/client
+      - ./proto:/app/proto
+      - client_node_modules:/app/client/node_modules
+    restart: unless-stopped
+
+  server-prod:
+    profiles:
+      - prod
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: production
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+  client-prod:
+    profiles:
+      - prod
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: production
+    depends_on:
+      - server-prod
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  server_node_modules:
+  client_node_modules:
